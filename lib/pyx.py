@@ -12,7 +12,6 @@ class Config:
     def get(cls, name):
         config_path = os.path.join(os.getcwd(), "config", name + ".py")
 
-        print(config_path)
         config_spec = importlib.util.spec_from_file_location("pyx_config", config_path)
         config_module = importlib.util.module_from_spec(config_spec)
         config_spec.loader.exec_module(config_module)
