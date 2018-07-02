@@ -19,6 +19,8 @@ class PyxTaskNew(pyx.Task):
         self._create_test()
         self._create_lib()
         self._create_gitignore()
+        self._create_readme()
+        self._create_config()
 
     def _create_test(self):
         os.mkdir("test")
@@ -33,3 +35,10 @@ class PyxTaskNew(pyx.Task):
     def _create_readme(self):
         with open("README.md", 'w') as readme:
             readme.write("# {}".format(self.name))
+
+    def _create_config(self):
+        with open("pyx_config.py", 'w') as config:
+            config.write("""import pyx
+
+class {}(pyx.Config):
+    pass""".format(self.name.capitalize()))
