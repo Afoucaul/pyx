@@ -1,3 +1,9 @@
+"""Pyx project creation
+
+Usage:
+    pyx new <name>
+"""
+
 import pyx
 import os
 
@@ -20,6 +26,7 @@ class PyxTaskNew(pyx.Task):
         self._create_lib()
         self._create_gitignore()
         self._create_readme()
+        self._create_app()
         self._create_config()
 
     def _create_test(self):
@@ -36,9 +43,21 @@ class PyxTaskNew(pyx.Task):
         with open("README.md", 'w') as readme:
             readme.write("# {}".format(self.name))
 
-    def _create_config(self):
-        with open("pyx_config.py", 'w') as config:
-            config.write("""import pyx
+    def _create_app(self):
+        with open("pyx_app.py", 'w') as app:
+            app.write("""import pyx
 
-class {}(pyx.Config):
-    pass""".format(self.name.capitalize()))
+class {app}(pyx.Application):
+    def __init__(self, config):
+        super().__init__(config)
+
+    def run(self):
+        print("Greetings from {app}!")""".format(app=self.name.capitalize()))
+
+    def _create_config(self):
+        os.mkdir("config")
+        with open(os.path.join("config", "default.py"), 'w') as default_config:
+            default_config.write('''import pyx
+
+class PyxConfigDefault(pyx.Config):
+    environment = "dev"''')
