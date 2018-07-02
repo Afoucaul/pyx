@@ -4,7 +4,7 @@
 The Python task-oriented project manager.
 
 Usage:
-    pyx <task>
+    pyx <task> [<arg>...]
 """
 
 import docopt
@@ -31,12 +31,9 @@ def retrieve_task(task_module, pyx_module):
 def execute_task_from_module(task_module, env):
     pyx_module = retrieve_pyx(task_module)
     task = retrieve_task(task_module, pyx_module)
+    cwd = os.getcwd()
 
-    task(env).run()
-
-
-def extract_env(args):
-    return {}
+    task(cwd, *env).run()
 
 
 def main(args):
@@ -48,8 +45,7 @@ def main(args):
     task_module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(task_module)
 
-    env = extract_env(args)
-    execute_task_from_module(task_module, env)
+    execute_task_from_module(task_module, args['<arg>'])
     
 
 if __name__ == '__main__':
