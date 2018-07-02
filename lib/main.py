@@ -33,17 +33,23 @@ def execute_task_from_module(task_module, env):
     task = retrieve_task(task_module, pyx_module)
     cwd = os.getcwd()
 
-    task(cwd, *env).run()
+    try: 
+        instance = task(cwd, *env)
+    except:
+        print(task_module.__doc__)
+        return 
+
+    instance.run()
 
 
 def main(args):
     print("Running pyx from {}".format(PYX_PATH))
 
-    spec = importlib.util.spec_from_file_location(
+    task_spec = importlib.util.spec_from_file_location(
             args['<task>'], 
             os.path.join(PYX_PATH, "tasks", args['<task>'] + ".py"))
-    task_module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(task_module)
+    task_module = importlib.util.module_from_spec(task_spec)
+    task_spec.loader.exec_module(task_module)
 
     execute_task_from_module(task_module, args['<arg>'])
     
