@@ -37,7 +37,7 @@ def execute_task_from_module(task_module, env):
         instance = task(cwd, *env)
     except:
         print(task_module.__doc__)
-        return 
+        raise
 
     instance.run()
 
