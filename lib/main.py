@@ -43,7 +43,7 @@ def execute_task_from_module(task_module, env):
 
 
 def main(args):
-    print("Running pyx from {}".format(PYX_PATH))
+    print("=== Running pyx from {} ===\n".format(PYX_PATH))
 
     task_spec = importlib.util.spec_from_file_location(
             args['<task>'], 
