@@ -16,7 +16,6 @@ class PyxTaskNew(pyx.Task):
         self.target = os.path.join(self.cwd, self.name)
 
     def run(self):
-        print(self.cwd, self.name)
         os.mkdir(self.target)
         os.chdir(self.target)
         self._create_skeleton()
