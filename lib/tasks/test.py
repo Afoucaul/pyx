@@ -5,8 +5,11 @@ Usage:
 """
 
 import pyx
+import unittest
+import glob
+import os
 
 
 class PyxTaskTest(pyx.Task):
     def run(self):
-        print("TODO")
+        unittest.main(module=None)
