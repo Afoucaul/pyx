@@ -13,7 +13,7 @@ import sys
 import inspect
 import importlib
 
-PYX_PATH = os.path.dirname(os.path.abspath(inspect.getsourcefile(lambda: 0)))
+PYX_PATH = os.path.join(os.path.dirname(os.path.abspath(inspect.getsourcefile(lambda: 0))), "pyx")
 
 
 def retrieve_pyx(module):
