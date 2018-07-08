@@ -6,6 +6,7 @@ Usage:
 
 import pyx
 import os
+import re
 
 
 CONFIG_SKELETON = '''import pyx
@@ -15,8 +16,9 @@ class PyxConfigDefault(pyx.Config):
 
 
 APP_SKELETON = """import pyx
+import {module}
 
-class {app}(pyx.Application):
+class {app}App(pyx.Application):
     def __init__(self, config):
         super().__init__(config)
 
@@ -32,9 +34,18 @@ class Test{app}(unittest.TestCase):
 """
 
 
+def validate_name(name):
+    assert re.match(r'^[a-z][a-z0-9_]*$', name)
+
+
+def underscores_to_camel(name):
+    return name.replace('_', ' ').title().replace(' ', '')
+
+
 class PyxTaskNew(pyx.Task):
     def __init__(self, cwd, name):
         self.cwd = cwd
+        validate_name(name)
         self.name = name
 
         self.target = os.path.join(self.cwd, self.name)
@@ -55,10 +66,12 @@ class PyxTaskNew(pyx.Task):
     def _create_test(self):
         os.mkdir("test")
         with open("test/test_{}.py".format(self.name), 'w') as test:
-            test.write(TEST_SKELETON.format(app=self.name.capitalize()))
+            test.write(TEST_SKELETON.format(app=underscores_to_camel(self.name)))
 
     def _create_lib(self):
-        os.mkdir("lib")
+        os.mkdir(self.name)
+        with open(os.path.join(self.name, "__init__.py"), 'w'):
+            pass
 
     def _create_gitignore(self):
         with open(".gitignore", 'w') as gitignore:
@@ -70,7 +83,8 @@ class PyxTaskNew(pyx.Task):
 
     def _create_app(self):
         with open("pyx_app.py", 'w') as app:
-            app.write(APP_SKELETON.format(app=self.name.capitalize()))
+            app.write(APP_SKELETON.format(
+                module=self.name, app=underscores_to_camel(self.name)))
 
     def _create_config(self):
         os.mkdir("config")
