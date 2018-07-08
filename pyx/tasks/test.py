@@ -4,12 +4,12 @@ Usage:
     pyx test
 """
 
+import os
 import pyx
 import unittest
-import glob
-import os
+
 
 
 class PyxTaskTest(pyx.Task):
     def run(self):
-        unittest.main(module=None)
+        os.system("python3 -m unittest -v")
