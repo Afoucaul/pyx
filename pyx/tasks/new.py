@@ -51,7 +51,7 @@ class PyxTaskNew(pyx.Task):
         self.target = os.path.join(self.cwd, self.name)
 
     def run(self):
-        os.mkdir(self.target)
+        pyx.utils.mkdir(self.target)
         os.chdir(self.target)
         self._create_skeleton()
 
@@ -64,29 +64,34 @@ class PyxTaskNew(pyx.Task):
         self._create_config()
 
     def _create_test(self):
-        os.mkdir("test")
-        with open("test/test_{}.py".format(self.name), 'w') as test:
-            test.write(TEST_SKELETON.format(app=underscores_to_camel(self.name)))
+        pyx.utils.mkdir("test")
+        pyx.utils.write_file(
+                os.path.join("test", "test_{}.py".format(self.name)),
+                TEST_SKELETON.format(app=underscores_to_camel(self.name)))
 
     def _create_lib(self):
-        os.mkdir(self.name)
+        pyx.utils.mkdir(self.name)
         with open(os.path.join(self.name, "__init__.py"), 'w'):
             pass
 
     def _create_gitignore(self):
-        with open(".gitignore", 'w') as gitignore:
-            gitignore.write("# Write here what you want to ignore")
+        pyx.utils.write_file(
+                ".gitignore",
+                "# Write here what you want to ignore")
 
     def _create_readme(self):
-        with open("README.md", 'w') as readme:
-            readme.write("# {}".format(self.name))
+        pyx.utils.write_file(
+                "README.md",
+                "# {}".format(self.name))
 
     def _create_app(self):
-        with open("pyx_app.py", 'w') as app:
-            app.write(APP_SKELETON.format(
+        pyx.utils.write_file(
+                "pyx_app.py",
+                APP_SKELETON.format(
                 module=self.name, app=underscores_to_camel(self.name)))
 
     def _create_config(self):
-        os.mkdir("config")
-        with open(os.path.join("config", "default.py"), 'w') as default_config:
-            default_config.write(CONFIG_SKELETON)
+        pyx.utils.mkdir("config")
+        pyx.utils.write_file(
+                os.path.join("config", "default.py"),
+                CONFIG_SKELETON)
