@@ -54,11 +54,16 @@ def main(args):
 
     # print("=== Running pyx from {} ===\n".format(PYX_PATH))
 
-    task_spec = importlib.util.spec_from_file_location(
-            args['<task>'], 
-            os.path.join(PYX_PATH, "tasks", args['<task>'] + ".py"))
-    task_module = importlib.util.module_from_spec(task_spec)
-    task_spec.loader.exec_module(task_module)
+    try:
+        task_module = pyx.utils.load_module(
+                os.path.join(PYX_PATH, "tasks", args['<task>'] + ".py"),
+                "task_module")
+    except FileNotFoundError:
+        pyx.utils.print_colors(
+                "No such task: {}".format(args['<task>']),
+                fg="RED",
+                style="BRIGHT")
+        exit()
 
     execute_task_from_module(task_module, args['<arg>'])
     
