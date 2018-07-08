@@ -9,6 +9,7 @@ Usage:
 
 import docopt
 import os
+import sys
 import inspect
 import importlib
 
@@ -43,6 +44,9 @@ def execute_task_from_module(task_module, env):
 
 
 def main(args):
+    sys.path.append(os.getcwd())    # Append the target project to the list of 
+                                    # importable paths
+
     print("=== Running pyx from {} ===\n".format(PYX_PATH))
 
     task_spec = importlib.util.spec_from_file_location(
