@@ -1,6 +1,7 @@
 import importlib
 import os
 import sys
+import enum
 try:
     import colorama
     colorama.init()
@@ -12,9 +13,9 @@ except ImportError:
     colorama = None
 
 
-def print_colors(*args, bg="RESET", fg="RESET", style="RESET", **kwargs):
-    if colorama: 
-        args = ["{}{}{}{}".format(
+def print_colors(*args, bg="RESET", fg="RESET", style="NORMAL", **kwargs):
+    if colorama is not None: 
+        args = ["{}{}{}{}{}".format(
             getattr(colorama.Back, bg), 
             getattr(colorama.Fore, fg), 
             getattr(colorama.Style, style), 
@@ -36,21 +37,18 @@ def load_module(path, module_name):
 def mkdir(path):
     try:
         os.mkdir(path)
-        if colorama:
-            print("Created directory {}".format(path), fg=colorama.Fore.RED)
-        else:
-            print("Created directory {}".format(path))
+        print_colors("Created directory {}".format(path), fg="GREEN")
 
     except FileExistsError:
-        print("Skipped creation of directory {}".format(path))
+        print_colors("Skipped creation of directory {}".format(path), fg="RED")
 
 
 def write_file(path, content):
     try:
         open(path, 'r').close()
-        print("Skipping writing of file {}".format(path))
+        print_colors("Skipped writing of file {}".format(path), fg="RED")
 
     except FileNotFoundError:
         with open(path, 'w') as file:
             file.write(content)
-        print("Created file {}".format(path))
+        print_colors("Created file {}".format(path), fg="GREEN")
