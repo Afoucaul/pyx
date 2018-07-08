@@ -1,5 +1,27 @@
 import importlib
 import os
+import sys
+try:
+    import colorama
+    colorama.init()
+except ImportError:
+    print(
+            "Module colorama was not found; "
+            "you can install it with `pip3 install colorama`", 
+            file=sys.stderr)
+    colorama = None
+
+
+def print_colors(*args, bg="RESET", fg="RESET", style="RESET", **kwargs):
+    if colorama: 
+        args = ["{}{}{}{}".format(
+            getattr(colorama.Back, bg), 
+            getattr(colorama.Fore, fg), 
+            getattr(colorama.Style, style), 
+            arg, 
+            colorama.Style.RESET_ALL) 
+            for arg in args]
+    print(*args, **kwargs)
 
 
 def load_module(path, module_name):
@@ -14,7 +36,10 @@ def load_module(path, module_name):
 def mkdir(path):
     try:
         os.mkdir(path)
-        print("Created directory {}".format(path))
+        if colorama:
+            print("Created directory {}".format(path), fg=colorama.Fore.RED)
+        else:
+            print("Created directory {}".format(path))
 
     except FileExistsError:
         print("Skipped creation of directory {}".format(path))
