@@ -12,6 +12,7 @@ import os
 import sys
 import inspect
 import importlib
+import pyx
 
 PYX_PATH = os.path.join(os.path.dirname(os.path.abspath(inspect.getsourcefile(lambda: 0))), "pyx")
 
@@ -40,14 +41,18 @@ def execute_task_from_module(task_module, env):
         print(task_module.__doc__)
         raise
 
-    instance.run()
+    try:
+        instance.run()
+    except pyx.task.TaskFailure as error:
+        print(error)
+        exit()
 
 
 def main(args):
     sys.path.append(os.getcwd())    # Append the target project to the list of 
                                     # importable paths
 
-    print("=== Running pyx from {} ===\n".format(PYX_PATH))
+    # print("=== Running pyx from {} ===\n".format(PYX_PATH))
 
     task_spec = importlib.util.spec_from_file_location(
             args['<task>'], 

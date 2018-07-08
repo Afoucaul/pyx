@@ -8,4 +8,4 @@ utils = import_module(".utils", __name__)
 Application = _application.Application
 Config = _config.Config
 Task = _task.Task
-
+TaskFailure = _task.TaskFailure

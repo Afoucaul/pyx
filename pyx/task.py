@@ -1,3 +1,11 @@
+import os
+
+
+class TaskFailure(Exception):
+    def __init__(self, origin):
+        super().__init__("Task {} aborted.".format(origin))
+
+
 class Task:
     """Base class for tasks"""
     def __init__(self, cwd, *env):
@@ -6,3 +14,6 @@ class Task:
 
     def run(self):
         raise NotImplementedError
+
+    def fail(self):
+        raise TaskFailure(type(self).__module__)

@@ -33,9 +33,11 @@ class Test{app}(unittest.TestCase):
         assert True
 """
 
+VALID_NAME_PATTERN = r'^[a-z][a-z0-9_]*$'
+
 
 def validate_name(name):
-    assert re.match(r'^[a-z][a-z0-9_]*$', name)
+    return re.match(VALID_NAME_PATTERN, name)
 
 
 def underscores_to_camel(name):
@@ -45,12 +47,26 @@ def underscores_to_camel(name):
 class PyxTaskNew(pyx.Task):
     def __init__(self, cwd, name):
         self.cwd = cwd
-        validate_name(name)
         self.name = name
-
         self.target = os.path.join(self.cwd, self.name)
 
     def run(self):
+        if not validate_name(self.name):
+            raise Exception("Name should match the following pattern: {}".format(
+                VALID_NAME_PATTERN))
+
+        if os.path.isdir(self.target):
+            pyx.utils.print_colors(
+                    "A {}/ directory already exists".format(self.name), 
+                    fg="RED",
+                    style="BRIGHT")
+            self.fail()
+
+        pyx.utils.print_colors(
+                "Creating project {}...".format(self.name),
+                fg="GREEN",
+                style="BRIGHT")
+
         pyx.utils.mkdir(self.target)
         os.chdir(self.target)
         self._create_skeleton()
