@@ -41,6 +41,16 @@ def print_success(*args, **kwargs):
     print_colors(*args, fg="GREEN", style="BRIGHT")
 
 
+def prompt(message):
+    while True:
+        print_colors("{} [Y]es/[N]o".format(message).lower(), fg="BLUE")
+        result = input("> ")
+        if result in ('y', 'yes'):
+            return True
+        elif result in ('n', 'no'):
+            return False
+
+
 def load_module(path, module_name):
     """Load a module given its path, and loads it and returns it"""
     spec = importlib.util.spec_from_file_location(module_name, path)
