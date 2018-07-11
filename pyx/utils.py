@@ -25,6 +25,22 @@ def print_colors(*args, bg="RESET", fg="RESET", style="NORMAL", **kwargs):
     print(*args, **kwargs)
 
 
+def print_error(*args, **kwargs):
+    print_colors("E -", *args, fg="RED", style="BRIGHT", file=sys.stderr, **kwargs)
+
+
+def print_warning(*args, **kwargs):
+    print_colors("W -", *args, fg="RED", style="NORMAL", file=sys.stderr, **kwargs)
+
+
+def print_info(*args, **kwargs):
+    print_colors(*args, fg="GREEN", style="NORMAL")
+
+
+def print_success(*args, **kwargs):
+    print_colors(*args, fg="GREEN", style="BRIGHT")
+
+
 def load_module(path, module_name):
     """Load a module given its path, and loads it and returns it"""
     spec = importlib.util.spec_from_file_location(module_name, path)
