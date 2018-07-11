@@ -78,6 +78,7 @@ class PyxTaskNew(pyx.Task):
         self._create_readme()
         self._create_app()
         self._create_config()
+        self._init_pipenv()
 
     def _create_test(self):
         pyx.utils.mkdir("test")
@@ -111,3 +112,21 @@ class PyxTaskNew(pyx.Task):
         pyx.utils.write_file(
                 os.path.join("config", "default.py"),
                 CONFIG_SKELETON)
+
+    def _init_pipenv(self):
+        try:
+            from pipenv import core as pc
+            pc.ensure_project()
+        except ImportError:
+            message = "pipenv is not available, "
+            try:
+                import pip
+                message += "do you wish to install it with pip?"
+                if pyx.utils.prompt(message):
+                    os.system("pip3 install pipenv")
+                else:
+                    pyx.utils.print_warning("pipenv not found, skipping pipenv initialization")
+            except ImportError:
+                message += "nor is pip. Skipping pipenv initialization"
+                pyx.utils.print_warning(message)
+
