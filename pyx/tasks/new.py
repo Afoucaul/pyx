@@ -1,12 +1,13 @@
 """Pyx project creation
 
 Usage:
-    pyx new <name>
+    new <name>
 """
 
-import pyx
 import os
 import re
+import docopt
+import sys
 
 
 CONFIG_SKELETON = '''import pyx
@@ -53,7 +54,7 @@ def underscores_to_camel(name):
     return name.replace('_', ' ').title().replace(' ', '')
 
 
-class PyxTaskNew(pyx.Task):
+class PyxTaskNew():
     def __init__(self, cwd, name):
         self.cwd = cwd
         self.name = name
@@ -152,3 +153,14 @@ class PyxTaskNew(pyx.Task):
                 message += "nor is pip. Skipping pipenv initialization"
                 pyx.utils.print_warning(message)
 
+
+def main(args):
+    name = args['<name>']
+    cwd = os.getcwd()
+    write_skeleton(cwd, name)
+
+
+if __name__ == '__main__':
+    print(sys.argv)
+    args = docopt.docopt(__doc__)
+    main(args)
