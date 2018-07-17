@@ -12,4 +12,4 @@ import unittest
 
 class PyxTaskTest(pyx.Task):
     def run(self):
-        os.system("python3 -m unittest -v")
+        os.system("cd test; python3 -m unittest -v")
