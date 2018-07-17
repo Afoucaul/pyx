@@ -33,6 +33,15 @@ class Test{app}(unittest.TestCase):
         assert True
 """
 
+
+SETUP_SKELETON = """import setuptools
+
+setuptools.setup(
+    name="{project}",
+    version="1.0"
+)
+"""
+
 VALID_NAME_PATTERN = r'^[a-z][a-z0-9_]*$'
 
 
@@ -74,8 +83,10 @@ class PyxTaskNew(pyx.Task):
     def _create_skeleton(self):
         self._create_test()
         self._create_lib()
+        self._create_setup()
         self._create_gitignore()
         self._create_readme()
+        self._create_pyx()
         self._create_app()
         self._create_config()
         self._init_pipenv()
@@ -86,10 +97,8 @@ class PyxTaskNew(pyx.Task):
                 os.path.join("test", "test_{}.py".format(self.name)),
                 TEST_SKELETON.format(app=underscores_to_camel(self.name)))
 
-    def _create_lib(self):
-        pyx.utils.mkdir(self.name)
-        with open(os.path.join(self.name, "__init__.py"), 'w'):
-            pass
+    def _create_pyx(self):
+        pyx.utils.mkdir(".pyx")
 
     def _create_gitignore(self):
         pyx.utils.write_file(
@@ -101,16 +110,27 @@ class PyxTaskNew(pyx.Task):
                 "README.md",
                 "# {}".format(self.name))
 
+    def _create_lib(self):
+        pyx.utils.mkdir(self.name)
+        with open(os.path.join(self.name, "__init__.py"), 'w'):
+            pass
+
     def _create_app(self):
         pyx.utils.write_file(
-                "pyx_app.py",
+                os.path.join(".pyx", "app.py"),
                 APP_SKELETON.format(
                 module=self.name, app=underscores_to_camel(self.name)))
 
-    def _create_config(self):
-        pyx.utils.mkdir("config")
+    def _create_setup(self):
         pyx.utils.write_file(
-                os.path.join("config", "default.py"),
+                os.path.join(self.name, "setup.py"),
+                SETUP_SKELETON.format(
+                project=self.name))
+
+    def _create_config(self):
+        pyx.utils.mkdir(os.path.join(".pyx", "config"))
+        pyx.utils.write_file(
+                os.path.join(".pyx", "config", "default.py"),
                 CONFIG_SKELETON)
 
     def _init_pipenv(self):
@@ -124,6 +144,8 @@ class PyxTaskNew(pyx.Task):
                 message += "do you wish to install it with pip?"
                 if pyx.utils.prompt(message):
                     os.system("pip3 install pipenv")
+                    from pipenv import core as pc
+                    pc.ensure_project()
                 else:
                     pyx.utils.print_warning("pipenv not found, skipping pipenv initialization")
             except ImportError:
