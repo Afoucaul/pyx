@@ -11,7 +11,7 @@ class Application:
 
     @classmethod
     def get(cls):
-        app_path = os.path.join(os.getcwd(), "pyx_app.py")
+        app_path = os.path.join(os.getcwd(), ".pyx", "app.py")
         app_module = load_module(app_path, "pyx_app")
 
         for attr in app_module.__dict__.values():
