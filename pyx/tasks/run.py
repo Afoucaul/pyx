@@ -14,7 +14,7 @@ import os
 def main(args):
     app = pyx.Application.get()
     config = pyx.Config.get(args['<config>'])
-    print(app, config)
+    app(config).run()
 
 
 def prepare_args(args):
