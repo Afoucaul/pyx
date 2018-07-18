@@ -2,6 +2,7 @@ import importlib
 import os
 import sys
 import enum
+import re
 try:
     import colorama
     colorama.init()
@@ -11,6 +12,9 @@ except ImportError:
             "you can install it with `pip3 install colorama`", 
             file=sys.stderr)
     colorama = None
+
+
+VALID_NAME_PATTERN = r'^[a-z][a-z0-9_]*$'
 
 
 def print_colors(*args, bg="RESET", fg="RESET", style="NORMAL", **kwargs):
@@ -78,3 +82,11 @@ def write_file(path, content):
         with open(path, 'w') as file:
             file.write(content)
         print_colors("Created file {}".format(path), fg="GREEN")
+
+
+def validate_project_name(name):
+    return re.match(VALID_NAME_PATTERN, name)
+
+
+def underscores_to_camel(name):
+    return name.replace('_', ' ').title().replace(' ', '')
