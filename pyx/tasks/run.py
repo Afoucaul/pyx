@@ -1,19 +1,30 @@
 """Pyx project execution
 
 Usage:
-    pyx run [<config>]
+    run [<config>]
 """
 
 
+import docopt
 import pyx
+import sys
 import os
 
 
-class PyxTaskRun(pyx.Task):
-    def __init__(self, cwd, config="default"):
-        self.cwd = cwd
-        self.app = pyx.Application.get()
-        self.config = pyx.Config.get(config)
+def main(args):
+    app = pyx.Application.get()
+    config = pyx.Config.get(args['<config>'])
+    print(app, config)
 
-    def run(self):
-        self.app(self.config).run()
+
+def prepare_args(args):
+    if args['<config>'] is None:
+        args['<config>'] = "default"
+
+
+if __name__ == '__main__':
+    sys.path.append(os.getcwd())
+    args = docopt.docopt(__doc__)
+    prepare_args(args)
+
+    main(args)
