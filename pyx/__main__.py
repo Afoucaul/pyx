@@ -28,7 +28,7 @@ def retrieve_task(name):
 
 def main(args):
     task = retrieve_task(args['<task>'])
-    subprocess.run(["python3", task, " ".join(args['<task_args>'])])
+    subprocess.run(["python3", task] + args['<task_args>'])
 
 
 args = docopt.docopt(__doc__)
