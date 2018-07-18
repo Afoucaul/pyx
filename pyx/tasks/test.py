@@ -1,15 +1,19 @@
 """Run tests in a Pyx project.
 
 Usage: 
-    pyx test
+    test
 """
 
 import os
-import pyx
-import unittest
+import docopt
+import subprocess
 
 
+def main(args):
+    os.chdir("test")
+    subprocess.run(["python3", "-m", "unittest", "-v"])
 
-class PyxTaskTest(pyx.Task):
-    def run(self):
-        os.system("cd test; python3 -m unittest -v")
+
+if __name__ == '__main__':
+    args = docopt.docopt(__doc__)
+    main(args)
