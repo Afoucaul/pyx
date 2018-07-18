@@ -117,7 +117,7 @@ def create_structure(name):
             module=name, app=utils.underscores_to_camel(name)))
 
     utils.write_file(
-            os.path.join(name, "setup.py"),
+            "setup.py",
             SETUP_SKELETON.format(
             project=name))
 
