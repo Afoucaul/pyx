@@ -25,10 +25,11 @@ def retrieve_task(name):
         raise Exception("No such task: {}".format(name))
 
 
-def main(args):
+def main():
+    args = docopt.docopt(__doc__)
     task = retrieve_task(args['<task>'])
     subprocess.run(["python3", task] + args['<task_args>'])
 
 
-args = docopt.docopt(__doc__)
-main(args)
+if __name__ == '__main__':
+    main()
