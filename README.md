@@ -34,12 +34,15 @@ This will create the following directory:
 
 ```txt
 my_project/
-├── config
-│   └── default.py
-├── .gitignore
 ├── my_project
-│   └── __init__.py
-├── pyx_app.py
+│   ├── __init__.py
+│   └── setup.py
+├── .gitignore
+├── Pipfile
+├── .pyx
+│   ├── app.py
+│   └── config
+│       └── default.py
 ├── README.md
 └── test
     └── test_my_project.py
