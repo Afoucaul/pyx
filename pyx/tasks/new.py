@@ -5,9 +5,9 @@ Usage:
 """
 
 import os
-import re
 import docopt
 import sys
+from pyx import utils, errors
 
 
 CONFIG_SKELETON = '''import pyx
@@ -43,121 +43,93 @@ setuptools.setup(
 )
 """
 
-VALID_NAME_PATTERN = r'^[a-z][a-z0-9_]*$'
 
+def create_project(cwd, name):
+    target = os.path.join(cwd, name)
 
-def validate_name(name):
-    return re.match(VALID_NAME_PATTERN, name)
+    if not utils.validate_project_name(name):
+        raise errors.PyxError("Name should match the following pattern: {}".format(
+            VALID_NAME_PATTERN))
 
-
-def underscores_to_camel(name):
-    return name.replace('_', ' ').title().replace(' ', '')
-
-
-class PyxTaskNew():
-    def __init__(self, cwd, name):
-        self.cwd = cwd
-        self.name = name
-        self.target = os.path.join(self.cwd, self.name)
-
-    def run(self):
-        if not validate_name(self.name):
-            raise Exception("Name should match the following pattern: {}".format(
-                VALID_NAME_PATTERN))
-
-        if os.path.isdir(self.target):
-            pyx.utils.print_colors(
-                    "A {}/ directory already exists".format(self.name), 
-                    fg="RED",
-                    style="BRIGHT")
-            self.fail()
-
-        pyx.utils.print_colors(
-                "Creating project {}...".format(self.name),
-                fg="GREEN",
+    if os.path.isdir(target):
+        utils.print_colors(
+                "A {}/ directory already exists".format(name), 
+                fg="RED",
                 style="BRIGHT")
+        raise errors.TaskError()
 
-        pyx.utils.mkdir(self.target)
-        os.chdir(self.target)
-        self._create_skeleton()
+    utils.print_colors(
+            "Creating project {}...".format(name),
+            fg="GREEN",
+            style="BRIGHT")
 
-    def _create_skeleton(self):
-        self._create_test()
-        self._create_lib()
-        self._create_setup()
-        self._create_gitignore()
-        self._create_readme()
-        self._create_pyx()
-        self._create_app()
-        self._create_config()
-        self._init_pipenv()
+    utils.mkdir(target)
+    os.chdir(target)
 
-    def _create_test(self):
-        pyx.utils.mkdir("test")
-        pyx.utils.write_file(
-                os.path.join("test", "test_{}.py".format(self.name)),
-                TEST_SKELETON.format(app=underscores_to_camel(self.name)))
 
-    def _create_pyx(self):
-        pyx.utils.mkdir(".pyx")
+def create_structure(name):
+    utils.mkdir("test")
+    utils.write_file(
+            os.path.join("test", "test_{}.py".format(name)),
+            TEST_SKELETON.format(app=utils.underscores_to_camel(name)))
 
-    def _create_gitignore(self):
-        pyx.utils.write_file(
-                ".gitignore",
-                "# Write here what you want to ignore")
+    utils.mkdir(".pyx")
 
-    def _create_readme(self):
-        pyx.utils.write_file(
-                "README.md",
-                "# {}".format(self.name))
+    utils.write_file(
+            ".gitignore",
+            "# Write here what you want to ignore")
 
-    def _create_lib(self):
-        pyx.utils.mkdir(self.name)
-        with open(os.path.join(self.name, "__init__.py"), 'w'):
-            pass
+    utils.write_file(
+            "README.md",
+            "# {}".format(name))
 
-    def _create_app(self):
-        pyx.utils.write_file(
-                os.path.join(".pyx", "app.py"),
-                APP_SKELETON.format(
-                module=self.name, app=underscores_to_camel(self.name)))
+    utils.mkdir(name)
+    utils.write_file(
+            os.path.join(name, "__init__.py"),
+            "from importlib import import_module")
 
-    def _create_setup(self):
-        pyx.utils.write_file(
-                os.path.join(self.name, "setup.py"),
-                SETUP_SKELETON.format(
-                project=self.name))
+    utils.write_file(
+            os.path.join(".pyx", "app.py"),
+            APP_SKELETON.format(
+            module=name, app=utils.underscores_to_camel(name)))
 
-    def _create_config(self):
-        pyx.utils.mkdir(os.path.join(".pyx", "config"))
-        pyx.utils.write_file(
-                os.path.join(".pyx", "config", "default.py"),
-                CONFIG_SKELETON)
+    utils.write_file(
+            os.path.join(name, "setup.py"),
+            SETUP_SKELETON.format(
+            project=name))
 
-    def _init_pipenv(self):
+    utils.mkdir(os.path.join(".pyx", "config"))
+    utils.write_file(
+            os.path.join(".pyx", "config", "default.py"),
+            CONFIG_SKELETON)
+
+
+def init_pipenv():
+    try:
+        from pipenv import core as pc
+        pc.ensure_project()
+    except ImportError:
+        message = "pipenv is not available, "
         try:
-            from pipenv import core as pc
-            pc.ensure_project()
+            import pip
+            message += "do you wish to install it with pip?"
+            if pyx.utils.prompt(message):
+                pip.main(["install", "pipenv"])
+                from pipenv import core as pc
+                pc.ensure_project()
+            else:
+                utils.print_warning("pipenv not found, skipping pipenv initialization")
         except ImportError:
-            message = "pipenv is not available, "
-            try:
-                import pip
-                message += "do you wish to install it with pip?"
-                if pyx.utils.prompt(message):
-                    os.system("pip3 install pipenv")
-                    from pipenv import core as pc
-                    pc.ensure_project()
-                else:
-                    pyx.utils.print_warning("pipenv not found, skipping pipenv initialization")
-            except ImportError:
-                message += "nor is pip. Skipping pipenv initialization"
-                pyx.utils.print_warning(message)
+            message += "nor is pip. Skipping pipenv initialization"
+            utils.print_warning(message)
 
 
 def main(args):
     name = args['<name>']
     cwd = os.getcwd()
-    write_skeleton(cwd, name)
+    create_project(cwd, name)
+    create_structure(name)
+    init_pipenv()
 
 
 if __name__ == '__main__':
