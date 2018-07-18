@@ -1,10 +1,14 @@
 import setuptools
 
 setuptools.setup(
+    name="pyx-manager",
+    version="1.2",
     entry_points={
         'console_scripts': ["pyx = pyx.__main__:main"]
     },
-    name="pyx-manager",
     packages=setuptools.find_packages(),
-    version="1.2"
+    install_requires=[
+        'docopt',
+        'colorama'
+        ]
 )
