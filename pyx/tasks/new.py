@@ -16,7 +16,12 @@ class PyxConfigDefault(pyx.Config):
     environment = "dev"'''
 
 
-APP_SKELETON = """import pyx
+APP_SKELETON = '''"""{app} pyx application
+
+This script is the entry point for the pyx run command.
+"""
+
+import pyx
 import {module}
 
 class {app}App(pyx.Application):
@@ -24,24 +29,42 @@ class {app}App(pyx.Application):
         super().__init__(config)
 
     def run(self):
-        print("Greetings from {app}!")"""
+        print("Greetings from {app}!")'''
 
 
-TEST_SKELETON = """import unittest
+TEST_SKELETON = '''"""Unit tests for {app}
+"""
+
+import unittest
 
 class Test{app}(unittest.TestCase):
     def test_the_truth(self):
         assert True
-"""
+'''
 
 
-SETUP_SKELETON = """import setuptools
+SETUP_SKELETON = '''import setuptools
 
 setuptools.setup(
     name="{project}",
     version="1.0"
 )
+'''
+
+
+MAIN_SKELETON = '''"""Package entry point
+
+Usage:
+    python -m package [<args>...]
 """
+
+def main(args):
+    print("Hello from pyx app")
+
+if __name__ == '__main__':
+    args = docopt.docopt(__doc__)
+    main(args)
+'''
 
 
 def create_project(cwd, name):
@@ -49,7 +72,7 @@ def create_project(cwd, name):
 
     if not utils.validate_project_name(name):
         raise errors.PyxError("Name should match the following pattern: {}".format(
-            VALID_NAME_PATTERN))
+            utils.VALID_NAME_PATTERN))
 
     if os.path.isdir(target):
         utils.print_colors(
