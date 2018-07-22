@@ -26,11 +26,11 @@ class Test{app}(unittest.TestCase):
 SETUP_SKELETON = '''import setuptools
 
 
-settings = {
-    'name':     {project},
-    'version":  "1.0",
-    'author':   {user}
-
+settings = {{
+    'name':     "{project}",
+    'version':  "1.0",
+    'author':   "{user}"
+}}
 
 if __name__ == '__main__':
     setuptools.setup(**settings)
@@ -59,13 +59,11 @@ Add here all that you need to manage your project.
 
 # PyPI distrubution management.
 # You can avoid typing your plain credentials here, by using keyring.
-pypi = {
+pypi = {{
     'username':      '',
     'password':      '',
     'repository':    'https://test.pypi.org/legacy'
-}
-
-main_package = "{package}"
+}}
 '''
 
 
