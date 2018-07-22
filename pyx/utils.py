@@ -101,3 +101,11 @@ def ensure_pyx():
 
 def get_project():
     return load_module(os.path.join(os.getcwd(), ".pyx", "project.py"), "project")
+
+
+def get_settings():
+    return load_module("setup.py", "setup").settings
+
+
+def is_git():
+    return os.path.isdir(".git")

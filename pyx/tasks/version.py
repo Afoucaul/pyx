@@ -13,7 +13,7 @@ from pyx import utils as pyxutl
 
 
 def print_current_version():
-    settings = get_settings()
+    settings = pyxutl.get_settings()
     pyxutl.print_info("{} - Version: {}".format(settings['name'], settings['version']))
 
 
@@ -31,10 +31,6 @@ def upgrade():
 
     with open("setup.py", 'w') as setup:
         setup.write(content)
-
-
-def get_settings():
-    return pyxutl.load_module("setup.py", "setup").settings
 
 
 def main():
