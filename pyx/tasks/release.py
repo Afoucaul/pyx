@@ -1,7 +1,7 @@
 """Distribute your project to a PyPI repository
 
 Usage:
-    distribute
+    release
 """
 
 
@@ -29,6 +29,11 @@ def twine_command(args):
     return cmd
 
 
+def git_release():
+    version = pyxutl.get_settings()['version']
+    subprocess.run(["git", "tag", "-a", version])
+
+
 def main():
     pyxutl.ensure_pyx()
 
@@ -37,6 +42,8 @@ def main():
     project = pyxutl.get_project()
     pypi = project.pypi
 
+    if pyxutl.is_git():
+        git_release()
     subprocess.run(["python3", "setup.py", "sdist", "bdist_wheel"])
     subprocess.run(twine_command(pypi))
 
