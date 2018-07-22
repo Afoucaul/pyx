@@ -95,4 +95,5 @@ def underscores_to_camel(name):
 
 def ensure_pyx():
     if not os.path.isdir(".pyx"):
-        raise pyxerr.PyxError("No .pyx/ directory found. Please run this inside a pyx project.")
+        print_error("No .pyx/ directory found. Please run this inside a pyx project.")
+        sys.exit(1)
