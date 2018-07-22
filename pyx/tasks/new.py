@@ -67,6 +67,21 @@ if __name__ == '__main__':
 '''
 
 
+PROJECT_SKELETON = '''"""Project attributes
+
+Add here all that you need to manage your project.
+"""
+
+# PyPI distrubution management.
+# You can avoid typing your plain credentials here, by using keyring.
+pypi = {
+    username=       '',
+    password=       '',
+    repository=     'https://test.pypi.org/legacy'
+}
+'''
+
+
 def create_project(cwd, name):
     target = os.path.join(cwd, name)
 
@@ -96,8 +111,6 @@ def create_structure(name):
             os.path.join("test", "test_{}.py".format(name)),
             TEST_SKELETON.format(app=utils.underscores_to_camel(name)))
 
-    utils.mkdir(".pyx")
-
     utils.write_file(
             ".gitignore",
             "# Write here what you want to ignore")
@@ -106,10 +119,17 @@ def create_structure(name):
             "README.md",
             "# {}".format(name))
 
+    utils.write_file(
+            "setup.py",
+            SETUP_SKELETON.format(
+            project=name))
+
     utils.mkdir(name)
     utils.write_file(
             os.path.join(name, "__init__.py"),
             "from importlib import import_module")
+
+    utils.mkdir(".pyx")
 
     utils.write_file(
             os.path.join(".pyx", "app.py"),
@@ -117,9 +137,8 @@ def create_structure(name):
             module=name, app=utils.underscores_to_camel(name)))
 
     utils.write_file(
-            "setup.py",
-            SETUP_SKELETON.format(
-            project=name))
+            os.path.join(".pyx", "project.py"),
+            PROJECT_SKELETON)
 
     utils.mkdir(os.path.join(".pyx", "config"))
     utils.write_file(

@@ -1,7 +1,7 @@
 """Distribute your project to a PyPI repository
 
 Usage:
-    distribute [<config>]
+    distribute
 """
 
 
@@ -9,7 +9,6 @@ import docopt
 import subprocess
 import pyx
 import pyx.utils as pyxutl
-import pyx.errors as pyxerr
 
 
 def twine_command(args):
@@ -30,22 +29,13 @@ def twine_command(args):
     return cmd
 
 
-def prepare_args(args):
-    if args['<config>'] is None:
-        args['<config>'] = "default"
-
-
 def main():
     pyxutl.ensure_pyx()
 
     args = docopt.docopt(__doc__)
-    prepare_args(args)
 
-    config = pyx.Config.get(args['<config>'])
-    try:
-        pypi = config.pypi
-    except AttributeError:
-        raise pyxerr.ConfigError(config, "pypi")
+    project = pyxutl.get_project()
+    pypi = project.pypi
 
     subprocess.run(["python3", "setup.py", "sdist", "bdist_wheel"])
     subprocess.run(twine_command(pypi))

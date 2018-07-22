@@ -97,3 +97,7 @@ def ensure_pyx():
     if not os.path.isdir(".pyx"):
         print_error("No .pyx/ directory found. Please run this inside a pyx project.")
         sys.exit(1)
+
+
+def get_project():
+    return load_module(os.path.join(os.getcwd(), ".pyx", "project.py"), "project")
