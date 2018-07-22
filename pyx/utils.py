@@ -12,6 +12,7 @@ except ImportError:
             "you can install it with `pip3 install colorama`", 
             file=sys.stderr)
     colorama = None
+from . import errors as pyxerr
 
 
 VALID_NAME_PATTERN = r'^[a-z][a-z0-9_]*$'
@@ -90,3 +91,8 @@ def validate_project_name(name):
 
 def underscores_to_camel(name):
     return name.replace('_', ' ').title().replace(' ', '')
+
+
+def ensure_pyx():
+    if not os.path.isdir(".pyx"):
+        raise pyxerr.PyxError("No .pyx/ directory found. Please run this inside a pyx project.")
