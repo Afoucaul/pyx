@@ -48,7 +48,7 @@ def print_success(*args, **kwargs):
 
 def prompt(message):
     while True:
-        print_colors("{} [Y]es/[N]o".format(message).lower(), fg="BLUE")
+        print_colors("{} [Y]es/[N]o".format(message), fg="BLUE")
         result = input("> ")
         if result in ('y', 'yes'):
             return True
