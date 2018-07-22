@@ -1,6 +1,7 @@
 import os
 from .utils import load_module
 
+
 class Config:
     """Base class for project configs"""
     @classmethod
