@@ -1,30 +1,19 @@
 """Pyx project execution
 
 Usage:
-    run [<config>]
+    run
 """
 
 
 import docopt
-import pyx
-import sys
-import os
+import subprocess
 
 
-def main(args):
-    app = pyx.Application.get()
-    config = pyx.Config.get(args['<config>'])
-    app(config).run()
+def main():
+    _args = docopt.docopt(__doc__)
 
-
-def prepare_args(args):
-    if args['<config>'] is None:
-        args['<config>'] = "default"
+    subprocess.run(["pipenv", "run", "python", "main.py"])
 
 
 if __name__ == '__main__':
-    sys.path.append(os.getcwd())
-    args = docopt.docopt(__doc__)
-    prepare_args(args)
-
-    main(args)
+    main()

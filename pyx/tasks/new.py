@@ -10,27 +10,6 @@ import sys
 from pyx import utils, errors
 
 
-CONFIG_SKELETON = '''import pyx
-
-class PyxConfigDefault(pyx.Config):
-    environment = "dev"'''
-
-
-APP_SKELETON = '''"""{app} pyx application
-
-This script is the entry point for the pyx run command.
-"""
-
-import pyx
-import {module}
-
-class {app}App(pyx.Application):
-    def __init__(self, config):
-        super().__init__(config)
-
-    def run(self):
-        print("Greetings from {app}!")'''
-
 
 TEST_SKELETON = '''"""Unit tests for {app}
 """
@@ -82,6 +61,22 @@ pypi = {
 '''
 
 
+ENTRY_POINT_SKELETON = '''"""main.py
+
+Entry point for the project.
+"""
+import {package}
+
+
+def main():
+    print("Greetings from {package}!")
+
+
+if __name__ == '__main__':
+    main()
+'''
+
+
 def create_project(cwd, name):
     target = os.path.join(cwd, name)
 
@@ -116,6 +111,10 @@ def create_structure(name):
             "# Write here what you want to ignore")
 
     utils.write_file(
+            "main.py",
+            ENTRY_POINT_SKELETON.format(package=name))
+
+    utils.write_file(
             "README.md",
             "# {}".format(name))
 
@@ -132,18 +131,8 @@ def create_structure(name):
     utils.mkdir(".pyx")
 
     utils.write_file(
-            os.path.join(".pyx", "app.py"),
-            APP_SKELETON.format(
-            module=name, app=utils.underscores_to_camel(name)))
-
-    utils.write_file(
             os.path.join(".pyx", "project.py"),
             PROJECT_SKELETON)
-
-    utils.mkdir(os.path.join(".pyx", "config"))
-    utils.write_file(
-            os.path.join(".pyx", "config", "default.py"),
-            CONFIG_SKELETON)
 
 
 def init_pipenv():
