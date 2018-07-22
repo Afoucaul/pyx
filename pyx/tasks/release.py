@@ -7,6 +7,7 @@ Usage:
 
 import docopt
 import subprocess
+import sys
 import pyx
 import pyx.utils as pyxutl
 
@@ -41,6 +42,11 @@ def main():
 
     project = pyxutl.get_project()
     pypi = project.pypi
+
+    version = pyxutl.get_settings()['version']
+    message = "The project will be released as version {}. Are you sure?"
+    if not pyxutl.prompt(message.format(version)):
+        sys.exit(0)
 
     if pyxutl.is_git():
         git_release()
