@@ -7,6 +7,7 @@ Usage:
 import os
 import docopt
 import sys
+import getpass
 from pyx import utils, errors
 
 
@@ -24,10 +25,15 @@ class Test{app}(unittest.TestCase):
 
 SETUP_SKELETON = '''import setuptools
 
-setuptools.setup(
-    name="{project}",
-    version="1.0"
-)
+
+settings = {
+    'name':     {project},
+    'version":  "1.0",
+    'author':   {user}
+
+
+if __name__ == '__main__':
+    setuptools.setup(**settings)
 '''
 
 
@@ -54,10 +60,12 @@ Add here all that you need to manage your project.
 # PyPI distrubution management.
 # You can avoid typing your plain credentials here, by using keyring.
 pypi = {
-    username=       '',
-    password=       '',
-    repository=     'https://test.pypi.org/legacy'
+    'username':      '',
+    'password':      '',
+    'repository':    'https://test.pypi.org/legacy'
 }
+
+main_package = "{package}"
 '''
 
 
@@ -121,7 +129,7 @@ def create_structure(name):
     utils.write_file(
             "setup.py",
             SETUP_SKELETON.format(
-            project=name))
+            project=name, user=getpass.getuser()))
 
     utils.mkdir(name)
     utils.write_file(
@@ -132,7 +140,7 @@ def create_structure(name):
 
     utils.write_file(
             os.path.join(".pyx", "project.py"),
-            PROJECT_SKELETON)
+            PROJECT_SKELETON.format(package=name))
 
 
 def init_pipenv():
