@@ -147,7 +147,9 @@ def init_pipenv():
             utils.print_warning(message)
 
 
-def main(args):
+def main():
+    args = docopt.docopt(__doc__)
+
     name = args['<name>']
     cwd = os.getcwd()
     create_project(cwd, name)
@@ -156,6 +158,4 @@ def main(args):
 
 
 if __name__ == '__main__':
-    print(sys.argv)
-    args = docopt.docopt(__doc__)
-    main(args)
+    main()
