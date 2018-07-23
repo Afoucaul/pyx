@@ -26,9 +26,9 @@ def retrieve_task(name):
         raise Exception("No such task: {}".format(name))
 
 
-def execute_task(task_name):
+def execute_task(task_name, args):
     task = retrieve_task(task_name)
-    subprocess.run(["python3", task] + task_name)
+    subprocess.run(["python3", task_name] + args)
 
 
 def print_command_list():
@@ -41,7 +41,7 @@ def main():
     args = docopt.docopt(__doc__)
     task_name = args['<task>']
     if task_name is not None:
-        execute_task(args['<task_args>'])
+        execute_task(args['<task>'], args['<task_args>'])
     else:
         print(__doc__)
         print_command_list()
