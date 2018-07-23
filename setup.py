@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name="pyx-manager",
-    version="1.6.2",
+    version="1.6.3",
     entry_points={
         'console_scripts': ["pyx = pyx.__main__:main"]
     },
