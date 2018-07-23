@@ -34,6 +34,8 @@ def upgrade():
 
 
 def main():
+    pyxutl.ensure_pyx()
+
     args = docopt.docopt(__doc__)
     if args['upgrade']:
         upgrade()
