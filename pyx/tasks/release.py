@@ -8,6 +8,7 @@ Usage:
 import docopt
 import subprocess
 import sys
+import shutil
 import pyx
 import pyx.utils as pyxutl
 
@@ -48,6 +49,7 @@ def main():
     if not pyxutl.prompt(message.format(version)):
         sys.exit(0)
 
+    shutil.rmtree("build", ignore_errors=True)
     if pyxutl.is_git():
         git_release()
     subprocess.run(["python3", "setup.py", "sdist", "bdist_wheel"])
