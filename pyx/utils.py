@@ -132,12 +132,15 @@ def get_tasks():
         shortdoc = load_module(os.path.join(global_root, f), f[:-3]).__doc__.split('\n')[0]
         tasks_dict[f[:-3]] = shortdoc
 
-    local_root = os.path.join(os.getcwd(), ".pyx", "tasks")
-    files = os.listdir(local_root)
-    for f in files:
-        if not f.endswith(".py") or f == "__init__.py":
-            continue
-        shortdoc = load_module(os.path.join(local_root, f), f[:-3]).__doc__.split('\n')[0]
-        tasks_dict[f[:-3]] = shortdoc
+    try:
+        local_root = os.path.join(os.getcwd(), ".pyx", "tasks")
+        files = os.listdir(local_root)
+        for f in files:
+            if not f.endswith(".py") or f == "__init__.py":
+                continue
+            shortdoc = load_module(os.path.join(local_root, f), f[:-3]).__doc__.split('\n')[0]
+            tasks_dict[f[:-3]] = shortdoc
+    except FileNotFoundError:
+        pass
 
     return tasks_dict.items()
