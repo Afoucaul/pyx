@@ -9,8 +9,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=[
         'docopt',
-        'colorama',
-        'twine'
+        'colorama'
         ],
     author='Armand Foucault',
     author_email='armand.foucault@telecom-bretagne.eu',
