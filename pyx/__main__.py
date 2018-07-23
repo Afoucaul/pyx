@@ -28,7 +28,7 @@ def retrieve_task(name):
 
 def execute_task(task_name):
     task = retrieve_task(task_name)
-    subprocess.run(["python3", task] + args['<task_args>'])
+    subprocess.run(["python3", task] + task_name)
 
 
 def print_command_list():
@@ -41,7 +41,7 @@ def main():
     args = docopt.docopt(__doc__)
     task_name = args['<task>']
     if task_name is not None:
-        execute_task(task_name)
+        execute_task(args['<task_args>'])
     else:
         print(__doc__)
         print_command_list()
