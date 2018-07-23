@@ -135,10 +135,10 @@ def create_structure(name):
             "from importlib import import_module")
 
     utils.mkdir(".pyx")
-
     utils.write_file(
             os.path.join(".pyx", "project.py"),
             PROJECT_SKELETON.format(package=name))
+    utils.mkdir(os.path.join(".pyx", "tasks"))
 
 
 def init_pipenv():
