@@ -28,7 +28,7 @@ def retrieve_task(name):
 
 def execute_task(task_name, args):
     task = retrieve_task(task_name)
-    subprocess.run(["python3", task_name] + args)
+    subprocess.run(["python3", task] + args)
 
 
 def print_command_list():
