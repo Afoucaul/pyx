@@ -13,6 +13,7 @@ except ImportError:
             file=sys.stderr)
     colorama = None
 from . import errors as pyxerr
+from . import tasks
 
 
 VALID_NAME_PATTERN = r'^[a-z][a-z0-9_]*$'
@@ -45,6 +46,15 @@ def print_info(*args, **kwargs):
 def print_success(*args, **kwargs):
     print_colors(*args, fg="GREEN", style="BRIGHT")
 
+
+def print_list(l):
+    l = list(l)
+    label_width = max(len(x) for x, _ in l)
+    for label, text in l:
+        print_colors(
+                "  {label: <{width}}    ".format(label=label, width=label_width),
+                fg="BLUE", style="BRIGHT", end="")
+        print(text)
 
 def prompt(message):
     while True:
@@ -109,3 +119,25 @@ def get_settings():
 
 def is_git():
     return os.path.isdir(".git")
+
+
+def get_tasks():
+    tasks_dict = {}
+
+    global_root = os.path.dirname(os.path.abspath(tasks.__file__))
+    files = os.listdir(global_root)
+    for f in files:
+        if not f.endswith(".py") or f == "__init__.py":
+            continue
+        shortdoc = load_module(os.path.join(global_root, f), f[:-3]).__doc__.split('\n')[0]
+        tasks_dict[f[:-3]] = shortdoc
+
+    local_root = os.path.join(os.getcwd(), ".pyx", "tasks")
+    files = os.listdir(local_root)
+    for f in files:
+        if not f.endswith(".py") or f == "__init__.py":
+            continue
+        shortdoc = load_module(os.path.join(local_root, f), f[:-3]).__doc__.split('\n')[0]
+        tasks_dict[f[:-3]] = shortdoc
+
+    return tasks_dict.items()
