@@ -10,7 +10,6 @@ import subprocess
 
 
 def main(args):
-    os.chdir("test")
     subprocess.run(["python3", "-m", "unittest", "-v", "discover", "test"])
 
 
