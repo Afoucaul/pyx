@@ -5,7 +5,7 @@ with open("PYPI_README.md", 'r') as f:
 
 setuptools.setup(
     name="pyx-manager",
-    version="1.6.5",
+    version="1.6.6",
     entry_points={
         'console_scripts': ["pyx = pyx.__main__:main"]
     },
@@ -19,5 +19,6 @@ setuptools.setup(
     author_email='armand.foucault@telecom-bretagne.eu',
     description="Command-line project manager",
     long_description=readme,
+    long_description_content_type='text/markdown',
     url="https://github.com/Afoucaul/pyx"
 )
