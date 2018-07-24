@@ -11,7 +11,7 @@ import subprocess
 
 def main(args):
     os.chdir("test")
-    subprocess.run(["python3", "-m", "unittest", "-v"])
+    subprocess.run(["python3", "-m", "unittest", "-v", "discover", "test"])
 
 
 if __name__ == '__main__':
