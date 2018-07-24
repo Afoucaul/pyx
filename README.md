@@ -73,4 +73,4 @@ The unit tests are run with `pyx test`, which will call the `unittest` module.
 
 The project also contains a `README.md` and a `.gitignore` files, for git projects.
 It contains a `setup.py` for distributing your project to PyPI, which can be done through the `pyx release` task.
-The credentials and repository for distribution are stored in `./.pyx/project.py'; although you don't need to write these: if Pyx cannot find them, you'll be prompted to type them.
+The credentials and repository for distribution are stored in `./.pyx/project.py`; although you don't need to write these: if Pyx cannot find them, you'll be prompted to type them.
