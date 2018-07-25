@@ -10,7 +10,7 @@ import subprocess
 
 
 def main(args):
-    subprocess.run(["python3", "-m", "unittest", "-v", "discover", "test"])
+    subprocess.run(["python3", "-m", "unittest", "discover", "-v", "test"])
 
 
 if __name__ == '__main__':
