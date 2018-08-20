@@ -5,7 +5,7 @@ with open("PYPI_README.md", 'r') as f:
 
 setuptools.setup(
     name="pyx-manager",
-    version="1.6.8",
+    version="1.6.9",
     entry_points={
         'console_scripts': ["pyx = pyx.__main__:main"]
     },
