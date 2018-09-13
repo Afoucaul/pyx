@@ -29,16 +29,16 @@ def get_tester():
     return t
 
 
-def run_with_pytest():
-    subprocess.run(["python3", "-m", "pytest"])
+def cmd_pytest():
+    return ["python3", "-m", "pytest"]
 
 
-def run_with_unittest():
-    subprocess.run(["python3", "-m", "unittest", "discover", "-v", "test"])
+def cmd_unittest():
+    return ["python3", "-m", "unittest", "discover", "-v", "test"]
     
 
-def run_default(tester):
-    subprocess.run(["python3", "-m", tester])
+def cmd_default(tester):
+    return ["python3", "-m", tester]
 
 
 def main(args):
@@ -48,7 +48,10 @@ def main(args):
         sys.exit(1)
 
     try:
-        globals()["run_with_{}".format(tester)]()
+        cmd = globals()["cmd_{}".format(tester)]()
+        if pyxutl.is_pipenv():
+            cmd = ["pipenv", "run"] + cmd
+        subprocess.run(cmd)
     except KeyError:
         run_default(tester)
 
