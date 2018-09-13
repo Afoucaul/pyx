@@ -121,6 +121,10 @@ def is_git():
     return os.path.isdir(".git")
 
 
+def is_pipenv():
+    return os.path.isfile('Pipfile')
+
+
 def get_tasks():
     tasks_dict = {}
 
